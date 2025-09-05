@@ -18,6 +18,9 @@ const Register = () => {
         { headers: { "Content-Type": "application/json" } }
       );
       setMessage(res.data.msg || "✅ Registration successful! You can now login.");
+      setTimeout(() => {
+        window.location.href = "/login"; 
+      }, 1500);
       console.log(res.data); // check response
       setForm({ username: "", email: "", password: "" });
     } catch (err) {
