@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { SearchContext } from "../context/searchContext.jsx";
+import { SearchContext } from "../context/SearchContext.jsx";
 
 const TransactionList = ({ transactions = [], onDelete }) => {
   const { searchText } = useContext(SearchContext); // 🔥 use Navbar search

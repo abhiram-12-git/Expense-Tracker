@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { SearchContext } from "../context/searchContext.jsx";
+import { SearchContext } from "../context/SearchContext.jsx";
 
 const Navbar = () => {
   const { logout } = useContext(AuthContext);

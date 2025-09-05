@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { BalanceContext } from "../context/BalanceContext.jsx";
-import { SearchContext } from "../context/searchContext.jsx";
+import { SearchContext } from "../context/SearchContext.jsx";
 
 import Balance from "../components/Balance.jsx";
 import IncomeExpense from "../components/IncomeExpense.jsx";
