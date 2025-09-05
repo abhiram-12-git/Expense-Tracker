@@ -36,7 +36,7 @@ export const BalanceProvider = ({ children }) => {
   const res = await axios.post(API_URL, transaction, {
     headers: { "x-auth-token": token },
   });
-  setTransactions([...transactions, res.data]);
+  await fetchTransactions(); // Ensure frontend is in sync with backend
   return res.data;
 };
 
