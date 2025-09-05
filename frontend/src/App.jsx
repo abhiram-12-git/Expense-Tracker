@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext.jsx";
-import { SearchProvider } from "./context/searchContext.jsx";
+import { SearchProvider } from "./context/SearchContext.jsx";
 import { BalanceProvider } from "./context/BalanceContext.jsx";
 
 import Login from "./pages/Login.jsx";
