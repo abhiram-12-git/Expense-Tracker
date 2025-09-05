@@ -41,7 +41,8 @@ router.post("/", auth, async (req, res) => {
     });
     res.status(201).json(transaction);
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    console.error("Transaction POST error:", err);
+    res.status(500).json({ error: "Server error", details: err.message });
   }
 });
 
