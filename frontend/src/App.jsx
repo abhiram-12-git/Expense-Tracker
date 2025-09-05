@@ -6,7 +6,7 @@ import { BalanceProvider } from "./context/BalanceContext.jsx";
 
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import Dashboard from "./pages/Dashboard.jsx"; 
+import Dashboard from "./pages/Dashboard .jsx"; 
 import Navbar from "./components/Navbar.jsx";
 import TransactionList1 from "./pages/TransactionList1.jsx";
 import TransactionList from "./components/TransactionList.jsx";
