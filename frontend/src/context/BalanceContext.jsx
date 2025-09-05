@@ -10,7 +10,7 @@ export const BalanceProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
 
-  const API_URL = "https://expence-tracker-3-me1x.onrender.com";
+  const API_URL = "https://expense-tracker-abhi.onrender.com";
 
   // Fetch transactions
   const fetchTransactions = async () => {

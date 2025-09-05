@@ -13,7 +13,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://expence-tracker-3-me1x.onrender.com/api/auth/register",
+        "https://expense-tracker-abhi.onrender.com/api/auth/register",
         form,
         { headers: { "Content-Type": "application/json" } }
       );
