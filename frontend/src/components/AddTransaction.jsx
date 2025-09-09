@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Message from "./Message.jsx";
 
 const AddTransaction = ({ onAdd }) => {
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
+  const timerRef = useRef(null);
 
   const showMessage = (type, text, duration = 3000) => {
     setMessage({ type, text });
-    setTimeout(() => setMessage({ type: "", text: "" }), duration);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setMessage({ type: "", text: "" }), duration);
   };
 
   const onSubmit = async (e) => {
@@ -18,8 +20,19 @@ const AddTransaction = ({ onAdd }) => {
       return;
     }
 
+    const numAmount = Number(amount);
+    if (isNaN(numAmount)) {
+      showMessage("warning", "Amount must be a number");
+      return;
+    }
+
+    if (!onAdd || typeof onAdd !== 'function') {
+      showMessage("error", "Add transaction function is not available");
+      return;
+    }
+
     try {
-      await onAdd({ text, amount: +amount }); // ✅ delegate to parent (Dashboard → BalanceContext)
+      await onAdd({ text, amount: numAmount });
       showMessage("success", "Transaction added successfully!");
       setText("");
       setAmount("");
@@ -35,8 +48,9 @@ const AddTransaction = ({ onAdd }) => {
       </h3>
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-600 font-medium mb-1">Text</label>
+          <label htmlFor="text" className="block text-gray-600 font-medium mb-1">Text</label>
           <input
+            id="text"
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -46,13 +60,14 @@ const AddTransaction = ({ onAdd }) => {
         </div>
 
         <div>
-          <label className="block text-gray-600 font-medium mb-1">
+          <label htmlFor="amount" className="block text-gray-600 font-medium mb-1">
             Amount{" "}
             <span className="text-sm text-gray-500">
               (negative = expense, positive = income)
             </span>
           </label>
           <input
+            id="amount"
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
@@ -68,8 +83,7 @@ const AddTransaction = ({ onAdd }) => {
           Add Transaction
         </button>
       </form>
-
-      <Message type={message.type} text={message.text} />
+      {message.text && <Message type={message.type} text={message.text} />}
     </div>
   );
 };

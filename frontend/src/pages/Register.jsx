@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContextBase.jsx";
 
 const Register = () => {
+  const { login } = useContext(AuthContext); // ✅ so we can save token immediately
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,13 +21,22 @@ const Register = () => {
         form,
         { headers: { "Content-Type": "application/json" } }
       );
-      setMessage(res.data.msg || "✅ Registration successful! You can now login.");
-      setTimeout(() => {
-        window.location.href = "/login"; 
-      }, 1500);
-      console.log(res.data); // check response
+
+      console.log("Register response:", res.data);
+
+      if (res.data.token) {
+        // ✅ if backend sends token, auto login
+        login(res.data.token);
+        setMessage("✅ Registration successful! Redirecting...");
+        setTimeout(() => navigate("/"), 1000);
+      } else {
+        setMessage(res.data.msg || "✅ Registration successful! Please login.");
+        setTimeout(() => navigate("/login"), 1500);
+      }
+
       setForm({ username: "", email: "", password: "" });
     } catch (err) {
+      console.error(err);
       setMessage(
         err.response?.data?.msg ||
         err.response?.data?.message ||
@@ -38,9 +51,17 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Create Account
         </h2>
+
         {message && (
-          <p className="mb-4 text-center text-sm text-gray-700">{message}</p>
+          <p
+            className={`mb-4 text-center text-sm ${
+              message.startsWith("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
         )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-600 mb-1">Name</label>
@@ -54,6 +75,7 @@ const Register = () => {
               required
             />
           </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Email</label>
             <input
@@ -66,6 +88,7 @@ const Register = () => {
               required
             />
           </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Password</label>
             <input
@@ -78,6 +101,7 @@ const Register = () => {
               required
             />
           </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-200"
@@ -85,6 +109,7 @@ const Register = () => {
             Register
           </button>
         </form>
+
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}
           <a href="/login" className="text-indigo-500 hover:underline">

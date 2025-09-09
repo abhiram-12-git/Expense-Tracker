@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContextBase.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -14,19 +16,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://expense-tracker-abhi.onrender.com/api/auth/login", form);
-      login(res.data.token); 
-      setMessage("✅ Login successful! Redirecting...");
-      setTimeout(() => {
-        window.location.href = "/"; 
-      }, 1500);
+      const res = await axios.post(
+        "https://expense-tracker-abhi.onrender.com/api/auth/login",
+        form,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      
+      console.log("Login response:", res.data); // ✅ debug
+      if (res.data.token) {
+        login(res.data.token);
+        setMessage("✅ Login successful! Redirecting...");
+        setTimeout(() => navigate("/"), 1000);
+      } else {
+        setMessage("❌ No token received from server.");
+      }
+
       setForm({ email: "", password: "" });
-
-    
     } catch (err) {
-      setMessage(err.response?.data?.msg || "❌ Login failed. Please try again.");
+      console.error(err);
+      setMessage(err.response?.data?.msg || "❌ Login failed.");
     }
   };
 
@@ -40,7 +48,6 @@ const Login = () => {
           Login to your Account
         </h2>
 
-        {/* Message */}
         {message && (
           <p
             className={`mb-4 text-center text-sm ${
@@ -51,7 +58,6 @@ const Login = () => {
           </p>
         )}
 
-        {/* Email */}
         <div className="mb-4">
           <label className="block text-gray-600 text-sm mb-2">Email</label>
           <input
@@ -65,7 +71,6 @@ const Login = () => {
           />
         </div>
 
-        {/* Password */}
         <div className="mb-6">
           <label className="block text-gray-600 text-sm mb-2">Password</label>
           <input
@@ -79,14 +84,13 @@ const Login = () => {
           />
         </div>
 
-        {/* Submit button */}
         <button
           type="submit"
           className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300"
         >
           Login
         </button>
-                <p className="mt-6 text-center text-gray-400 text-sm">
+        <p className="mt-6 text-center text-gray-400 text-sm">
           Don’t have an account?{" "}
           <a
             href="/register"

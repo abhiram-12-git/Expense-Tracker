@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { AuthContext } from "../context/AuthContextBase.jsx";
 import { SearchContext } from "../context/SearchContext.jsx";
 
 const Navbar = () => {
-  const { token, logout } = useContext(AuthContext);
-  const { searchText, setSearchText } = useContext(SearchContext);
+  const { token, logout } = useContext(AuthContext) || {};
+  const { searchText = "", setSearchText = () => {} } = useContext(SearchContext) || {};
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,12 +16,12 @@ const Navbar = () => {
           Expense Tracker
         </Link>
 
-        {/* Desktop Search (only if logged in) */}
+        {/* Desktop Search */}
         {token && (
           <div className="hidden md:flex items-center relative">
             <input
               type="text"
-              value={searchText || ""}
+              value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Search transactions..."
               className="pl-10 pr-4 py-2 w-64 rounded-full border border-gray-300 bg-white text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition duration-300"
@@ -42,7 +42,7 @@ const Navbar = () => {
           </div>
         )}
 
-        {/* Hamburger Button */}
+        {/* Hamburger */}
         <button
           className="md:hidden text-white text-2xl"
           onClick={() => setOpen(!open)}
@@ -61,7 +61,6 @@ const Navbar = () => {
             <>
               <Link to="/" className="hover:text-gray-200">Home</Link>
               <Link to="/add" className="hover:text-gray-200">Add Transaction</Link>
-              <Link to="/show-trans" className="hover:text-gray-200">Show Transactions</Link>
               <Link to="/transactions" className="hover:text-gray-200">All Transactions</Link>
               <button
                 onClick={logout}
@@ -80,7 +79,7 @@ const Navbar = () => {
           {token && (
             <input
               type="text"
-              value={searchText || ""}
+              value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Search transactions..."
               className="px-4 py-2 w-full rounded-full border border-gray-300 bg-white text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition duration-300 mb-2"
@@ -96,7 +95,6 @@ const Navbar = () => {
             <>
               <Link to="/" className="block py-2 hover:text-gray-200" onClick={() => setOpen(false)}>Home</Link>
               <Link to="/add" className="block py-2 hover:text-gray-200" onClick={() => setOpen(false)}>Add Transaction</Link>
-              <Link to="/show-trans" className="block py-2 hover:text-gray-200" onClick={() => setOpen(false)}>Show Transactions</Link>
               <Link to="/transactions" className="block py-2 hover:text-gray-200" onClick={() => setOpen(false)}>All Transactions</Link>
               <button
                 onClick={() => { logout(); setOpen(false); }}
